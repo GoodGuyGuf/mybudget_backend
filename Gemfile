@@ -38,6 +38,8 @@ group :development, :test do
 
   gem 'shoulda-matchers', '~> 4.0'
   gem 'shoulda-callback-matchers', '~> 1.1.1'
+
+  gem 'faker'
 end
 
 group :development do
