@@ -63,5 +63,28 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  config.before(:suite) { DatabaseCleaner.clean_with(:truncation) }
+  config.before(:each) { DatabaseCleaner.strategy = :transaction }
+  config.before(:each, js: true) { DatabaseCleaner.strategy = :truncation }
+  config.before(:each) { DatabaseCleaner.start }
+  config.before(:each) { DatabaseCleaner.clean }
+
+  # If you're getting a undefined method `callback' error, it's probably due to 
+  # classes being redefined by Spring - currently `shoulda-callback-matchers` 
+  # does not accommodate for reloaded classes. The easiest fix is to load the 
+  # matchers into the test library config in your rails_helper.rb:
+
+  config.include(Shoulda::Callback::Matchers::ActiveModel)
+
+  # If you're using Rails, add the following FactoryBot configuration to the
+  # rails_helper.rb:
+
   config.include FactoryBot::Syntax::Methods
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
 end
